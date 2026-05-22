@@ -355,9 +355,7 @@
       ✅ <strong>Zgłoszenie zostało wysłane!</strong><br>
       Potwierdzenie trafi na Twój e-mail. Skontaktujemy się z Tobą wkrótce.
     </div>
-    <div class="msg" id="errorMsg">
-      ❌ <strong>Wystąpił błąd.</strong> Spróbuj ponownie lub zadzwoń do nas bezpośrednio.
-    </div>
+
 
   </form>
 
@@ -449,38 +447,11 @@ document.getElementById('reklamacjaForm').addEventListener('submit', async funct
     console.warn('⚠️ Arkusz:', err.message);
   }
 
-  // 2️⃣ WYŚLIJ EMAIL z załącznikami przez FormSubmit (lub Apps Script)
-  try {
-    const formData = new FormData();
-    Object.entries(data).forEach(([k,v]) => formData.append(k,v));
-    formData.append('_to', 'reklamacje@4-eco.pl');
-    formData.append('_subject', `Reklamacja: ${data.imie} ${data.nazwisko} – ${data.rodzaj_usterki}`);
-    formData.append('_template', 'table');
-    formData.append('_captcha', 'false');
-    formData.append('_next', 'false');
-
-    // Dodaj załączniki
-    Array.from(fileInput.files).forEach(f => formData.append('attachment', f));
-
-    const resp = await fetch('https://formsubmit.co/ajax/reklamacje@4-eco.pl', {
-      method: 'POST',
-      body: formData
-    });
-
-    const result = await resp.json();
-    if (result.success === 'true' || result.success === true) {
-      document.getElementById('successMsg').classList.add('success');
-      document.getElementById('successMsg').style.display = 'block';
-      document.getElementById('reklamacjaForm').reset();
-      fileList.innerHTML = '';
-    } else {
-      throw new Error('FormSubmit error');
-    }
-  } catch(err) {
-    console.error('Email error:', err);
-    document.getElementById('errorMsg').classList.add('error-msg');
-    document.getElementById('errorMsg').style.display = 'block';
-  }
+  // 2️⃣ EMAIL — wyłączony tymczasowo (wymaga aktywacji FormSubmit)
+  // Dane są już w arkuszu Google — to wystarczy
+  document.getElementById('successMsg').style.display = 'block';
+  document.getElementById('reklamacjaForm').reset();
+  fileList.innerHTML = '';
 
   btn.disabled = false;
   btn.textContent = 'Wyślij zgłoszenie reklamacyjne →';
