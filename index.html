@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zgłoś Reklamację – 4 ECO</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f7fa;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px 60px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+    max-width: 680px;
+    width: 100%;
+    padding: 48px 48px 40px;
+  }
+
+  .logo {
+    display: block;
+    margin: 0 auto 28px;
+    max-width: 160px;
+  }
+
+  h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 0.97rem;
+    margin-bottom: 32px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+  }
+
+  label .req { color: #e53935; }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #dde1e7;
+    border-radius: 8px;
+    font-size: 0.97rem;
+    color: #222;
+    background: #fafbfc;
+    transition: border-color 0.2s;
+    outline: none;
+    font-family: inherit;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: #2eb87a;
+    background: #fff;
+  }
+
+  input.error, select.error, textarea.error {
+    border-color: #e53935;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .file-area {
+    border: 2px dashed #c8d0db;
+    border-radius: 10px;
+    padding: 22px 18px;
+    text-align: center;
+    background: #f7f9fc;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .file-area:hover, .file-area.drag-over {
+    border-color: #2eb87a;
+    background: #f0faf5;
+  }
+
+  .file-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .file-area .icon { font-size: 2rem; margin-bottom: 6px; }
+
+  .file-area p {
+    font-size: 0.88rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .file-list {
+    margin-top: 10px;
+    font-size: 0.83rem;
+    color: #444;
+    text-align: left;
+  }
+
+  .file-list span {
+    display: inline-block;
+    background: #e8f5ee;
+    color: #1e7e4a;
+    border-radius: 20px;
+    padding: 3px 10px;
+    margin: 3px 4px 3px 0;
+  }
+
+  .rodo {
+    font-size: 0.80rem;
+    color: #888;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .rodo a { color: #2eb87a; }
+
+  .checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: #2eb87a;
+    flex-shrink: 0;
+  }
+
+  .checkbox-row span {
+    font-size: 0.83rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: #2eb87a;
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 8px;
+  }
+
+  .btn-submit:hover { background: #25a06a; }
+  .btn-submit:active { transform: scale(0.99); }
+  .btn-submit:disabled { background: #a0d4b8; cursor: not-allowed; }
+
+  .msg {
+    display: none;
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 0.97rem;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .msg.success {
+    background: #e8f5ee;
+    border: 1.5px solid #2eb87a;
+    color: #1a6e3e;
+    display: block;
+  }
+
+  .msg.error-msg {
+    background: #fff0f0;
+    border: 1.5px solid #e53935;
+    color: #b71c1c;
+    display: block;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1.5px solid #eef0f3;
+    margin: 28px 0 24px;
+  }
+
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .badge {
+    background: #2eb87a;
+    color: #fff;
+    font-size: 0.72rem;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 560px) {
+    .card { padding: 28px 18px 28px; }
+    .row-2 { grid-template-columns: 1fr; }
+    h1 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <img class="logo" src="https://4-eco.pl/wp-content/uploads/2022/10/4-eco-logo.png" alt="4 ECO">
+
+  <h1>Zgłoś Reklamację</h1>
+  <p class="subtitle">Wypełnij formularz — odpowiemy najszybciej jak to możliwe.</p>
+
+  <form id="reklamacjaForm" novalidate>
+
+    <!-- DANE OSOBOWE -->
+    <div class="section-title">👤 Dane kontaktowe</div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>Imię <span class="req">*</span></label>
+        <input type="text" id="first-name" name="first-name" placeholder="Podaj imię">
+      </div>
+      <div class="form-group">
+        <label>Nazwisko <span class="req">*</span></label>
+        <input type="text" id="last-name" name="last-name" placeholder="Podaj nazwisko">
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>Adres e-mail <span class="req">*</span></label>
+        <input type="email" id="email" name="email" placeholder="Podaj e-mail">
+      </div>
+      <div class="form-group">
+        <label>Telefon <span class="req">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="Podaj telefon">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- SZCZEGÓŁY ZGŁOSZENIA -->
+    <div class="section-title">🔧 Szczegóły zgłoszenia</div>
+
+    <div class="row-2">
+      <div class="form-group">
+        <label>Numer umowy <span class="req">*</span></label>
+        <input type="text" id="umowa" name="umowa" placeholder="Podaj numer umowy">
+      </div>
+      <div class="form-group">
+        <label>Data montażu <span class="req">*</span></label>
+        <input type="date" id="data-montazu" name="data-montazu" min="2018-10-01">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Czego dotyczy zgłoszenie? <span class="req">*</span></label>
+      <select id="czego-dotyczy" name="czego-dotyczy">
+        <option value="">Wybierz rodzaj usterki ▼</option>
+        <option value="usterka falownika">Usterka falownika</option>
+        <option value="uszkodzenie modułu PV">Uszkodzenie modułu PV</option>
+        <option value="Usterka pompy ciepła/klimatyzacji">Usterka pompy ciepła / klimatyzacji</option>
+        <option value="Usterka kotła">Usterka kotła</option>
+        <option value="uszkodzenie w dostawie">Uszkodzenie w dostawie</option>
+        <option value="INNE">INNE</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Opis zgłoszenia reklamacyjnego</label>
+      <textarea id="message" name="message" placeholder="Opisz szczegółowo problem — co się stało, kiedy, jak często..."></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ZAŁĄCZNIKI -->
+    <div class="section-title">📎 Załączniki <span class="badge">opcjonalne</span></div>
+
+    <div class="form-group">
+      <div class="file-area" id="fileArea">
+        <input type="file" id="attachments" name="attachments" multiple
+               accept=".jpg,.jpeg,.png,.pdf,.zip,.7z">
+        <div class="icon">📁</div>
+        <p><strong>Kliknij lub przeciągnij pliki</strong><br>
+        Akceptowane formaty: JPEG, PNG, PDF, ZIP, 7-ZIP<br>
+        Maksymalny rozmiar: 10 MB na plik</p>
+      </div>
+      <div class="file-list" id="fileList"></div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- ZGODY -->
+    <div class="checkbox-row">
+      <input type="checkbox" id="rodo" name="rodo">
+      <span>Wyrażam zgodę na przetwarzanie moich danych osobowych przez 4 ECO Sp. z o.o. w celu obsługi zgłoszenia reklamacyjnego, zgodnie z <a href="https://4-eco.pl/polityka-prywatnosci/" target="_blank">Polityką Prywatności</a>. <span class="req">*</span></span>
+    </div>
+
+    <button type="submit" class="btn-submit" id="submitBtn">Wyślij zgłoszenie reklamacyjne →</button>
+
+    <div class="msg" id="successMsg">
+      ✅ <strong>Zgłoszenie zostało wysłane!</strong><br>
+      Potwierdzenie trafi na Twój e-mail. Skontaktujemy się z Tobą wkrótce.
+    </div>
+    <div class="msg" id="errorMsg">
+      ❌ <strong>Wystąpił błąd.</strong> Spróbuj ponownie lub zadzwoń do nas bezpośrednio.
+    </div>
+
+  </form>
+
+</div>
+
+<script>
+// ━━━ KONFIGURACJA ━━━
+const GOOGLE_SHEETS_URL = 'WSTAW_URL_APPS_SCRIPT_TUTAJ';
+// Email docelowy — wysyłka przez EmailJS lub Apps Script
+// Reklamacje trafiają na: reklamacje@4-eco.pl
+
+// ━━━ DRAG & DROP ━━━
+const fileArea = document.getElementById('fileArea');
+const fileInput = document.getElementById('attachments');
+const fileList = document.getElementById('fileList');
+
+fileArea.addEventListener('dragover', e => { e.preventDefault(); fileArea.classList.add('drag-over'); });
+fileArea.addEventListener('dragleave', () => fileArea.classList.remove('drag-over'));
+fileArea.addEventListener('drop', e => {
+  e.preventDefault();
+  fileArea.classList.remove('drag-over');
+  fileInput.files = e.dataTransfer.files;
+  updateFileList();
+});
+fileInput.addEventListener('change', updateFileList);
+
+function updateFileList() {
+  const files = Array.from(fileInput.files);
+  fileList.innerHTML = files.map(f =>
+    `<span>📎 ${f.name} (${(f.size/1024/1024).toFixed(2)} MB)</span>`
+  ).join('');
+}
+
+// ━━━ WALIDACJA ━━━
+function validate() {
+  let ok = true;
+  const required = ['first-name','last-name','email','phone','umowa','data-montazu','czego-dotyczy'];
+  required.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) { el.classList.add('error'); ok = false; }
+    else el.classList.remove('error');
+  });
+  const email = document.getElementById('email');
+  if (email.value && !email.value.includes('@')) { email.classList.add('error'); ok = false; }
+  const rodo = document.getElementById('rodo');
+  if (!rodo.checked) {
+    rodo.style.outline = '2px solid #e53935';
+    ok = false;
+  } else {
+    rodo.style.outline = '';
+  }
+  return ok;
+}
+
+// ━━━ SUBMIT ━━━
+document.getElementById('reklamacjaForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!validate()) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Wysyłanie...';
+
+  const data = {
+    imie:          document.getElementById('first-name').value.trim(),
+    nazwisko:      document.getElementById('last-name').value.trim(),
+    email:         document.getElementById('email').value.trim(),
+    telefon:       document.getElementById('phone').value.trim(),
+    numer_umowy:   document.getElementById('umowa').value.trim(),
+    data_montazu:  document.getElementById('data-montazu').value,
+    rodzaj_usterki: document.getElementById('czego-dotyczy').value,
+    opis:          document.getElementById('message').value.trim(),
+    timestamp:     new Date().toLocaleString('pl-PL'),
+    zdjecia:       Array.from(fileInput.files).map(f => f.name).join(', ') || 'brak'
+  };
+
+  // 1️⃣ WYŚLIJ DO GOOGLE SHEETS
+  try {
+    const params = new URLSearchParams();
+    Object.entries(data).forEach(([k,v]) => params.append(k,v));
+    await fetch(GOOGLE_SHEETS_URL + '?' + params.toString(), {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    console.log('✅ Dane zapisane w arkuszu');
+  } catch(err) {
+    console.warn('⚠️ Arkusz:', err.message);
+  }
+
+  // 2️⃣ WYŚLIJ EMAIL z załącznikami przez FormSubmit (lub Apps Script)
+  try {
+    const formData = new FormData();
+    Object.entries(data).forEach(([k,v]) => formData.append(k,v));
+    formData.append('_to', 'reklamacje@4-eco.pl');
+    formData.append('_subject', `Reklamacja: ${data.imie} ${data.nazwisko} – ${data.rodzaj_usterki}`);
+    formData.append('_template', 'table');
+    formData.append('_captcha', 'false');
+    formData.append('_next', 'false');
+
+    // Dodaj załączniki
+    Array.from(fileInput.files).forEach(f => formData.append('attachment', f));
+
+    const resp = await fetch('https://formsubmit.co/ajax/reklamacje@4-eco.pl', {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await resp.json();
+    if (result.success === 'true' || result.success === true) {
+      document.getElementById('successMsg').classList.add('success');
+      document.getElementById('successMsg').style.display = 'block';
+      document.getElementById('reklamacjaForm').reset();
+      fileList.innerHTML = '';
+    } else {
+      throw new Error('FormSubmit error');
+    }
+  } catch(err) {
+    console.error('Email error:', err);
+    document.getElementById('errorMsg').classList.add('error-msg');
+    document.getElementById('errorMsg').style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Wyślij zgłoszenie reklamacyjne →';
+});
+</script>
+</body>
+</html>
